@@ -1,10 +1,16 @@
 # Packet sniffer in python for Linux
 # Sniffs only incoming TCP packet
 import signal
-import socket, sys
+import socket
+import sys
+from datetime import datetime as dTime
+from os import getuid
 from struct import *
 
-from datetime import datetime as dTime
+# Before we even start make sure we are running as root
+if getuid() != 0:
+    print("\nPlease run as root... Exiting\n")
+    sys.exit(-1)
 
 communications = dict()
 
@@ -82,8 +88,8 @@ while True:
 
     ttl = iph[5]
     protocol = iph[6]
-    s_addr = socket.inet_ntoa(iph[8]);
-    d_addr = socket.inet_ntoa(iph[9]);
+    s_addr = socket.inet_ntoa(iph[8])
+    d_addr = socket.inet_ntoa(iph[9])
 
     if str(s_addr) in communications:
         communications[str(s_addr)].append(dTime.now())
