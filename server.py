@@ -95,7 +95,7 @@ while True:
         communications[str(s_addr)].append(dTime.now())
     else:
         communications[str(s_addr)] = [dTime.now()]
-    #print(communications.get(str(s_addr)))
+
     print(' Source Address : ' + str(s_addr))
 
     print(communications)

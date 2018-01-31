@@ -9,7 +9,6 @@ Martino Jones 20180105
 import argparse
 import subprocess
 from os import devnull
-from sys import argv
 from time import sleep
 
 # Arguments the user can pass in to slightly modify the runtime
@@ -20,6 +19,10 @@ parser.add_argument('--ip', type=str,
                     help='IP Address to send ping, defaults to loopback address.')
 parser.add_argument('--show', action='store_true',
                     help='Shows the pings if you would like output.')
+parser.add_argument('--ascii', type=str,
+                    help='ASCII Data type: ASCII characters you wish to transmit.')
+parser.add_argument('--asciiFile', type=str,
+                    help='ASCII File Data type: File of ASCII characters you wish to transmit.')
 args = parser.parse_args()
 
 # Seconds of additional time to wait in-between pings
@@ -30,6 +33,9 @@ ipToPing = "127.0.0.1"
 dataArray = []
 # Should the script output the ping stdout
 show = False
+# Data type
+DATATYPE = "NONE"
+
 
 # Get additional wait time if user provided is
 if args.wait:
@@ -38,19 +44,37 @@ if args.ip:
     ipToPing = args.ip
 if args.show:
     show = True
+if args.ascii:
+    DATATYPE = "ASCII"
+if args.asciiFile:
+    DATATYPE = "ASCIIFILE"
 
 
 def main():
-    print("Encoding data")
+    # There will be a switch here to support other inputs later, example being a file
+    # Someone wants to pass in ASCII or an ASCII file
+    if DATATYPE == "ASCII" or DATATYPE == "ASCIIFILE":
+        ASCIIDATA = ""
+        print("Encoding data")
 
-    # Convert the data into numbers
-    for args in argv[1:]:
+        # Detect if they want ascii or an ascii file
+        if DATATYPE == "ASCII":
+            ASCIIDATA = args.ascii
+        else:
+            ASCIIDATA = open(args.asciiFile)
+
         # Split the data by character and add to our dataArray
-        for line in args:
+        for line in ASCIIDATA:
             for entry in line:
                 # Make sure everything is a number, convert if not
                 dataArray.append(''.join(s for s in iter_bin(entry)))
-    ping(dataArray)
+
+        ping(dataArray)
+    elif DATATYPE == "NONE":
+        # The user didn't pass in a data type :-(
+        print("\n***************\nYou need to provide a data type, example --ascii\n*****************\n")
+        parser.print_help()
+        exit(-1)
 
 
 def iter_bin(s):
