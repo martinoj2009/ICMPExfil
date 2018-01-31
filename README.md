@@ -2,6 +2,8 @@
 
 ICMP Exfil allows you to transmit data via valid ICMP packets. You use the client script to pass in data you wish to exfiltrate, then on the device you're transmitting to you run the server. Anyone watching-- human or security system-- will just see valid ICMP packets, there's nothing malicious about the structure of the packets. Your data isn't hidden inside the ICMP packets either, so looking at the packet doesn't tell you what was exfiltrated. 
 
+![Screen Shot](https://image.ibb.co/hRrvDm/exfil.png)
+
 # Author
 Martino Jones, [martinojones.com](https://martinojones.com).
 
